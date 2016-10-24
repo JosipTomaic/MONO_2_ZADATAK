@@ -1,0 +1,39 @@
+﻿@model IEnumerable<Project.Service.Models.VehicleMake>
+
+@{
+    ViewBag.Title = "Vehicle Makers";
+}
+
+<h2>Vehicle Makers Table</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Abrv)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Abrv)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.VMakeID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.VMakeID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.VMakeID })
+        </td>
+    </tr>
+}
+
+</table>
