@@ -103,5 +103,27 @@ namespace Project.Service.Models
             vehicles = vehicles.Where(x => x.VehicleMake.Name.Contains(searchCondition) || x.Model.Contains(searchCondition));
             return vehicles.ToList();
         }
+
+        public List<VehicleMake> SortVehicleMaker(string sortCondition)
+        {
+            var vehicles = from x in db.VehicleMakes select x;
+            switch (sortCondition)
+            {
+                case "Name":
+                    vehicles = vehicles.OrderBy(x => x.Name);
+                    break;
+                case "Name_desc":
+                    vehicles = vehicles.OrderByDescending(x => x.Name);
+                    break;
+            }
+            return vehicles.ToList();
+        }
+
+        public List<VehicleMake> SearchVehicleMaker(string searchCondition)
+        {
+            var vehicles = from x in db.VehicleMakes select x;
+            vehicles = vehicles.Where(x => x.Name.Contains(searchCondition));
+            return vehicles.ToList();
+        }
     }
 }

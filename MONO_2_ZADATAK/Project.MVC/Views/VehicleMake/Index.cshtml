@@ -1,4 +1,6 @@
-﻿@model IEnumerable<Project.Service.Models.VehicleMake>
+﻿@model PagedList.IPagedList<Project.Service.Models.VehicleMake>
+@using PagedList.Mvc;
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 
 @{
     ViewBag.Title = "Vehicle Makers";
@@ -9,6 +11,13 @@
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
+@using (Html.BeginForm("Index", "VehicleMake", FormMethod.Get))
+{
+    <p>
+        Find: @Html.TextBox("searchCondition", ViewBag.CurrentFilter as string)
+        <input type="submit" value="Search" />
+    </p>
+}
 <table class="table">
     <tr>
         <th>
@@ -37,3 +46,8 @@
 }
 
 </table>
+<br />
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+@Html.PagedListPager(Model, page => Url.Action("Index",
+    new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))

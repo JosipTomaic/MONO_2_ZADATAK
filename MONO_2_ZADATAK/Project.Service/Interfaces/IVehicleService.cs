@@ -19,5 +19,7 @@ namespace Project.Service.Interfaces
         void DeleteVehicleModel(int? id);
         List<VehicleModel> SortVehicleModel(string sortCondition);
         List<VehicleModel> SearchVehicleModel(string searchCondition);
+        List<VehicleMake> SortVehicleMaker(string sortCondition);
+        List<VehicleMake> SearchVehicleMaker(string searchCondition);
     }
 }

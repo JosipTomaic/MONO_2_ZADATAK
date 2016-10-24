@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using Project.Service.DAL;
 using Project.Service.Models;
+using PagedList;
 
 namespace Project.MVC.Controllers
 {
@@ -17,20 +18,28 @@ namespace Project.MVC.Controllers
 
 
         // GET: VehicleMake
-        public ActionResult Index(string sortCondition)
+        public ActionResult Index(string sortCondition, string currentFilter, string searchCondition, int? page)
         {
+            ViewBag.CurrentSort = sortCondition;
             ViewBag.NameSortParm = sortCondition == "Name" ? "Name_desc" : "Name";
-            var vehicles = from x in db.VehicleMakes select x;
-            switch (sortCondition)
+            var vehicles = VehicleService.GetInstance().SortVehicleMaker(sortCondition);
+            if (searchCondition != null)
             {
-                case "Name":
-                    vehicles = vehicles.OrderBy(x => x.Name);
-                    break;
-                case "Name_desc":
-                    vehicles = vehicles.OrderByDescending(x => x.Name);
-                    break;
+                page = 1;
             }
-            return View(db.VehicleMakes.ToList());
+            else
+            {
+                searchCondition = currentFilter;
+            }
+            ViewBag.CurrentFilter = searchCondition;
+
+            if (!String.IsNullOrEmpty(searchCondition))
+            {
+                vehicles = VehicleService.GetInstance().SearchVehicleMaker(searchCondition);
+            }
+            int pageSize = 4;
+            int pageNumber = (page ?? 1);
+            return View(vehicles.ToPagedList(pageNumber, pageSize));
         }
 
         // GET: VehicleMake/Details/5
