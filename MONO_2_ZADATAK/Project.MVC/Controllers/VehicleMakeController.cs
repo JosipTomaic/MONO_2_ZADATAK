@@ -15,6 +15,7 @@ namespace Project.MVC.Controllers
     {
         private VehicleContext db = new VehicleContext();
 
+
         // GET: VehicleMake
         public ActionResult Index(string sortCondition)
         {
@@ -39,7 +40,7 @@ namespace Project.MVC.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            VehicleMake vehicleMake = db.VehicleMakes.Find(id);
+            VehicleMake vehicleMake = VehicleService.GetInstance().FindVehicleMaker(id);
             if (vehicleMake == null)
             {
                 return HttpNotFound();
@@ -62,8 +63,7 @@ namespace Project.MVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.VehicleMakes.Add(vehicleMake);
-                db.SaveChanges();
+                VehicleService.GetInstance().CreateVehicleMaker(vehicleMake);
                 return RedirectToAction("Index");
             }
 
@@ -77,7 +77,7 @@ namespace Project.MVC.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            VehicleMake vehicleMake = db.VehicleMakes.Find(id);
+            VehicleMake vehicleMake = VehicleService.GetInstance().FindVehicleMaker(id);
             if (vehicleMake == null)
             {
                 return HttpNotFound();
@@ -94,8 +94,7 @@ namespace Project.MVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(vehicleMake).State = EntityState.Modified;
-                db.SaveChanges();
+                VehicleService.GetInstance().UpdateVehicleMaker(vehicleMake);
                 return RedirectToAction("Index");
             }
             return View(vehicleMake);
@@ -108,7 +107,7 @@ namespace Project.MVC.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            VehicleMake vehicleMake = db.VehicleMakes.Find(id);
+            VehicleMake vehicleMake = VehicleService.GetInstance().FindVehicleMaker(id);
             if (vehicleMake == null)
             {
                 return HttpNotFound();
@@ -121,9 +120,7 @@ namespace Project.MVC.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            VehicleMake vehicleMake = db.VehicleMakes.Find(id);
-            db.VehicleMakes.Remove(vehicleMake);
-            db.SaveChanges();
+            VehicleService.GetInstance().DeleteVehicleMaker(id);
             return RedirectToAction("Index");
         }
 

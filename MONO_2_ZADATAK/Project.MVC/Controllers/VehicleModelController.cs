@@ -65,7 +65,7 @@ namespace Project.MVC.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            VehicleModel vehicleModel = db.VehicleModel.Find(id);
+            VehicleModel vehicleModel = VehicleService.GetInstance().FindVehicleModel(id);
             if (vehicleModel == null)
             {
                 return HttpNotFound();
@@ -89,8 +89,7 @@ namespace Project.MVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.VehicleModel.Add(vehicleModel);
-                db.SaveChanges();
+                VehicleService.GetInstance().CreateVehicleModel(vehicleModel);
                 return RedirectToAction("Index");
             }
 
@@ -105,7 +104,7 @@ namespace Project.MVC.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            VehicleModel vehicleModel = db.VehicleModel.Find(id);
+            VehicleModel vehicleModel = VehicleService.GetInstance().FindVehicleModel(id);
             if (vehicleModel == null)
             {
                 return HttpNotFound();
@@ -123,8 +122,7 @@ namespace Project.MVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(vehicleModel).State = EntityState.Modified;
-                db.SaveChanges();
+                VehicleService.GetInstance().UpdateVehicleModel(vehicleModel);
                 return RedirectToAction("Index");
             }
             ViewBag.VMakeID = new SelectList(db.VehicleMakes, "VMakeID", "Name", vehicleModel.VMakeID);
@@ -138,7 +136,7 @@ namespace Project.MVC.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            VehicleModel vehicleModel = db.VehicleModel.Find(id);
+            VehicleModel vehicleModel = VehicleService.GetInstance().FindVehicleModel(id);
             if (vehicleModel == null)
             {
                 return HttpNotFound();
@@ -151,9 +149,7 @@ namespace Project.MVC.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            VehicleModel vehicleModel = db.VehicleModel.Find(id);
-            db.VehicleModel.Remove(vehicleModel);
-            db.SaveChanges();
+            VehicleService.GetInstance().DeleteVehicleModel(id);
             return RedirectToAction("Index");
         }
 
