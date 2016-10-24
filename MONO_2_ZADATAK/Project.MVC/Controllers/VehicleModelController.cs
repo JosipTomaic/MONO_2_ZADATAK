@@ -71,7 +71,7 @@ namespace Project.MVC.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "VModelID,VMakeID,Name,Abrv")] VehicleModel vehicleModel)
+        public ActionResult Create([Bind(Include = "VModelID,VMakeID,Name,Model,Abrv")]VehicleModel vehicleModel)
         {
             if (ModelState.IsValid)
             {

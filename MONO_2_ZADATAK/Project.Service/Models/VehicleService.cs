@@ -65,7 +65,7 @@ namespace Project.Service.Models
 
         public void UpdateVehicleMaker(VehicleMake vehicleMaker)
         {
-            db.Entry(vehicleMake).State = EntityState.Modified;
+            db.Entry(vehicleMaker).State = EntityState.Modified;
             db.SaveChanges();
         }
 
