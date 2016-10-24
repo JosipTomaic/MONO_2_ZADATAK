@@ -12,10 +12,10 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Name)
+           @Html.ActionLink("Name", "Index", new { sortCondition = ViewBag.NameSortParm, currentFilter = ViewBag.CurrentFilter })
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Abrv)
+            @Html.ActionLink("Abrv", "Index", new { sortCondition = ViewBag.AbrvSortParm, currentFilter = ViewBag.CurrentFilter })
         </th>
         <th></th>
     </tr>

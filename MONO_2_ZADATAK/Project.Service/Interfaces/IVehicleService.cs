@@ -17,5 +17,7 @@ namespace Project.Service.Interfaces
         void UpdateVehicleModel(VehicleModel vehicleModel);
         VehicleModel FindVehicleModel(int? id);
         void DeleteVehicleModel(int? id);
+        List<VehicleModel> SortVehicleModel(string sortCondition);
+        List<VehicleModel> SearchVehicleModel(string searchCondition);
     }
 }

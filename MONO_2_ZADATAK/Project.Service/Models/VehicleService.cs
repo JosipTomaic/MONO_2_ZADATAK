@@ -74,5 +74,34 @@ namespace Project.Service.Models
             db.Entry(vehicleModel).State = EntityState.Modified;
             db.SaveChanges();
         }
+
+        public List<VehicleModel> SortVehicleModel(string sortCondition)
+        {
+            var vehicles = from x in db.VehicleModel select x;
+            switch (sortCondition)
+            {
+                case "Model_desc":
+                    vehicles = vehicles.OrderByDescending(x => x.Model);
+                    break;
+                case "Abrv":
+                    vehicles = vehicles.OrderBy(x => x.Abrv);
+                    break;
+                case "Abrv_desc":
+                    vehicles = vehicles.OrderByDescending(x => x.Abrv);
+                    break;
+                default:
+                    vehicles = vehicles.OrderBy(x => x.VModelID);
+                    break;
+            }
+
+            return vehicles.ToList();
+        }
+
+        public List<VehicleModel> SearchVehicleModel(string searchCondition)
+        {
+            var vehicles = from x in db.VehicleModel select x;
+            vehicles = vehicles.Where(x => x.VehicleMake.Name.Contains(searchCondition) || x.Model.Contains(searchCondition));
+            return vehicles.ToList();
+        }
     }
 }

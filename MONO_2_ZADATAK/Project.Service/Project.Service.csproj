@@ -52,14 +52,17 @@
     <Compile Include="Class1.cs" />
     <Compile Include="DAL\VehicleContext.cs" />
     <Compile Include="DAL\VehicleInitializer.cs" />
+    <Compile Include="Interfaces\IVehicleService.cs" />
     <Compile Include="Models\VehicleMake.cs" />
     <Compile Include="Models\VehicleModel.cs" />
+    <Compile Include="Models\VehicleService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

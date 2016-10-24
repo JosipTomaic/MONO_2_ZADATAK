@@ -23,6 +23,8 @@ namespace Project.MVC.Controllers
             var vehicleModel = db.VehicleModel.Include(v => v.VehicleMake);
             ViewBag.ModelSortParm = String.IsNullOrEmpty(sortCondition) ? "Model_desc" : "";      
             ViewBag.AbrvSortParm = sortCondition == "Abrv" ? "Abrv_desc" : "Abrv";
+            var vehicles = VehicleService.GetInstance().SortVehicleModel(sortCondition);
+
             if (searchCondition != null)
             {
                 page = 1;
@@ -31,27 +33,11 @@ namespace Project.MVC.Controllers
             {
                 searchCondition = currentFilter;
             }
-
             ViewBag.CurrentFilter = searchCondition;
-            var vehicles = from x in db.VehicleModel select x;
+
             if (!String.IsNullOrEmpty(searchCondition))
             {
-                vehicles = vehicles.Where(x => x.VehicleMake.Name.Contains(searchCondition) || x.Model.Contains(searchCondition));
-            }
-            switch (sortCondition)
-            {
-                case "Model_desc":
-                    vehicles = vehicles.OrderByDescending(x => x.Model);
-                    break;
-                case "Abrv":
-                    vehicles = vehicles.OrderBy(x => x.Abrv);
-                    break;
-                case "Abrv_desc":
-                    vehicles = vehicles.OrderByDescending(x => x.Abrv);
-                    break;
-                default:
-                    vehicles = vehicles.OrderBy(x => x.VModelID);
-                    break;
+                vehicles = VehicleService.GetInstance().SearchVehicleModel(searchCondition);
             }
             int pageSize = 4;
             int pageNumber = (page ?? 1);
