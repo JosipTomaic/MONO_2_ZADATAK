@@ -14,32 +14,26 @@ namespace Project.MVC.Controllers
 {
     public class VehicleMakeController : Controller
     {
-        private VehicleContext db = new VehicleContext();
+        private VehicleService vehicleService;
 
+        public VehicleMakeController()
+        {
+            this.vehicleService = VehicleService.GetInstance();
+        }
 
         // GET: VehicleMake
         public ActionResult Index(string sortCondition, string currentFilter, string searchCondition, int? page)
         {
             ViewBag.CurrentSort = sortCondition;
             ViewBag.NameSortParm = sortCondition == "Name" ? "Name_desc" : "Name";
-            var vehicles = VehicleService.GetInstance().SortVehicleMaker(sortCondition);
-            if (searchCondition != null)
-            {
-                page = 1;
-            }
-            else
-            {
-                searchCondition = currentFilter;
-            }
+            var vehicles = vehicleService.SortVehicleMaker(sortCondition, page);
             ViewBag.CurrentFilter = searchCondition;
 
             if (!String.IsNullOrEmpty(searchCondition))
             {
-                vehicles = VehicleService.GetInstance().SearchVehicleMaker(searchCondition);
+                vehicles = vehicleService.SearchVehicleMaker(searchCondition, currentFilter, page);
             }
-            int pageSize = 4;
-            int pageNumber = (page ?? 1);
-            return View(vehicles.ToPagedList(pageNumber, pageSize));
+            return View(vehicles);
         }
 
         // GET: VehicleMake/Details/5
@@ -49,7 +43,7 @@ namespace Project.MVC.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            VehicleMake vehicleMake = VehicleService.GetInstance().FindVehicleMaker(id);
+            VehicleMake vehicleMake = vehicleService.FindVehicleMaker(id);
             if (vehicleMake == null)
             {
                 return HttpNotFound();
@@ -72,7 +66,7 @@ namespace Project.MVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                VehicleService.GetInstance().CreateVehicleMaker(vehicleMake);
+                vehicleService.CreateVehicleMaker(vehicleMake);
                 return RedirectToAction("Index");
             }
 
@@ -86,7 +80,7 @@ namespace Project.MVC.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            VehicleMake vehicleMake = VehicleService.GetInstance().FindVehicleMaker(id);
+            VehicleMake vehicleMake = vehicleService.FindVehicleMaker(id);
             if (vehicleMake == null)
             {
                 return HttpNotFound();
@@ -103,7 +97,7 @@ namespace Project.MVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                VehicleService.GetInstance().UpdateVehicleMaker(vehicleMake);
+                vehicleService.UpdateVehicleMaker(vehicleMake);
                 return RedirectToAction("Index");
             }
             return View(vehicleMake);
@@ -116,7 +110,7 @@ namespace Project.MVC.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            VehicleMake vehicleMake = VehicleService.GetInstance().FindVehicleMaker(id);
+            VehicleMake vehicleMake = vehicleService.FindVehicleMaker(id);
             if (vehicleMake == null)
             {
                 return HttpNotFound();
@@ -129,17 +123,8 @@ namespace Project.MVC.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            VehicleService.GetInstance().DeleteVehicleMaker(id);
+            vehicleService.DeleteVehicleMaker(id);
             return RedirectToAction("Index");
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
         }
     }
 }

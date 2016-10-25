@@ -14,34 +14,28 @@ namespace Project.MVC.Controllers
 {
     public class VehicleModelController : Controller
     {
-        private VehicleContext db = new VehicleContext();
+        private VehicleService vehicleService;
+
+        public VehicleModelController()
+        {
+            vehicleService = VehicleService.GetInstance();
+        }
 
         // GET: VehicleModel
         public ActionResult Index(string sortCondition, string searchCondition, string currentFilter, int? page)
         {
             ViewBag.CurrentSort = sortCondition;
-            var vehicleModel = db.VehicleModel.Include(v => v.VehicleMake);
-            ViewBag.ModelSortParm = String.IsNullOrEmpty(sortCondition) ? "Model_desc" : "";      
+            ViewBag.NameSortParm = sortCondition == "Name" ? "Name_desc" : "Name";
+            ViewBag.ModelSortParm = sortCondition == "Model" ? "Model_desc" : "Model";
             ViewBag.AbrvSortParm = sortCondition == "Abrv" ? "Abrv_desc" : "Abrv";
-            var vehicles = VehicleService.GetInstance().SortVehicleModel(sortCondition);
-
-            if (searchCondition != null)
-            {
-                page = 1;
-            }
-            else
-            {
-                searchCondition = currentFilter;
-            }
+            var vehicles = vehicleService.SortVehicleModel(sortCondition, page);
             ViewBag.CurrentFilter = searchCondition;
 
-            if (!String.IsNullOrEmpty(searchCondition))
+            if (!string.IsNullOrEmpty(searchCondition))
             {
-                vehicles = VehicleService.GetInstance().SearchVehicleModel(searchCondition);
+                vehicles = vehicleService.SearchVehicleModel(searchCondition, currentFilter, page);
             }
-            int pageSize = 4;
-            int pageNumber = (page ?? 1);
-            return View(vehicles.ToPagedList(pageNumber, pageSize));
+            return View(vehicles);
         }
 
         // GET: VehicleModel/Details/5
@@ -51,7 +45,7 @@ namespace Project.MVC.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            VehicleModel vehicleModel = VehicleService.GetInstance().FindVehicleModel(id);
+            VehicleModel vehicleModel = vehicleService.FindVehicleModel(id);
             if (vehicleModel == null)
             {
                 return HttpNotFound();
@@ -62,7 +56,7 @@ namespace Project.MVC.Controllers
         // GET: VehicleModel/Create
         public ActionResult Create()
         {
-            ViewBag.VMakeID = new SelectList(db.VehicleMakes, "VMakeID", "Name");
+            ViewBag.VMakeID = vehicleService.GetAllVehicleMake();
             return View();
         }
 
@@ -75,11 +69,11 @@ namespace Project.MVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                VehicleService.GetInstance().CreateVehicleModel(vehicleModel);
+                vehicleService.CreateVehicleModel(vehicleModel);
                 return RedirectToAction("Index");
             }
 
-            ViewBag.VMakeID = new SelectList(db.VehicleMakes, "VMakeID", "Name", vehicleModel.VMakeID);
+            ViewBag.VMakeID = vehicleService.GetAllVehicleMake();
             return View(vehicleModel);
         }
 
@@ -90,12 +84,12 @@ namespace Project.MVC.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            VehicleModel vehicleModel = VehicleService.GetInstance().FindVehicleModel(id);
+            VehicleModel vehicleModel = vehicleService.FindVehicleModel(id);
             if (vehicleModel == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.VMakeID = new SelectList(db.VehicleMakes, "VMakeID", "Name", vehicleModel.VMakeID);
+            ViewBag.VMakeID = vehicleService.GetAllVehicleMake();
             return View(vehicleModel);
         }
 
@@ -104,14 +98,14 @@ namespace Project.MVC.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "VModelID,VMakeID,Name,Abrv")] VehicleModel vehicleModel)
+        public ActionResult Edit([Bind(Include = "VModelID,VMakeID,Name,Model,Abrv")] VehicleModel vehicleModel)
         {
             if (ModelState.IsValid)
             {
-                VehicleService.GetInstance().UpdateVehicleModel(vehicleModel);
+                vehicleService.UpdateVehicleModel(vehicleModel);
                 return RedirectToAction("Index");
             }
-            ViewBag.VMakeID = new SelectList(db.VehicleMakes, "VMakeID", "Name", vehicleModel.VMakeID);
+            ViewBag.VMakeID = vehicleService.GetAllVehicleMake();
             return View(vehicleModel);
         }
 
@@ -122,7 +116,7 @@ namespace Project.MVC.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            VehicleModel vehicleModel = VehicleService.GetInstance().FindVehicleModel(id);
+            VehicleModel vehicleModel = vehicleService.FindVehicleModel(id);
             if (vehicleModel == null)
             {
                 return HttpNotFound();
@@ -135,17 +129,8 @@ namespace Project.MVC.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            VehicleService.GetInstance().DeleteVehicleModel(id);
+            vehicleService.DeleteVehicleModel(id);
             return RedirectToAction("Index");
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
         }
     }
 }
