@@ -9,6 +9,8 @@ using System.Web.Mvc;
 using Project.Service.DAL;
 using Project.Service.Models;
 using PagedList;
+using Project.Service.ViewModels;
+using AutoMapper;
 
 namespace Project.MVC.Controllers
 {
@@ -22,30 +24,26 @@ namespace Project.MVC.Controllers
         }
 
         // GET: VehicleModel
-        public ActionResult Index(string sortCondition, string searchCondition, string currentFilter, int? page)
+        public ActionResult Index(string sortCondition, string currentFilter, string searchCondition, int? page)
         {
             ViewBag.CurrentSort = sortCondition;
             ViewBag.NameSortParm = sortCondition == "Name" ? "Name_desc" : "Name";
             ViewBag.ModelSortParm = sortCondition == "Model" ? "Model_desc" : "Model";
             ViewBag.AbrvSortParm = sortCondition == "Abrv" ? "Abrv_desc" : "Abrv";
-            var vehicles = vehicleService.SortVehicleModel(sortCondition, page);
             ViewBag.CurrentFilter = searchCondition;
-
-            if (!string.IsNullOrEmpty(searchCondition))
-            {
-                vehicles = vehicleService.SearchVehicleModel(searchCondition, currentFilter, page);
-            }
+            var vehicles = vehicleService.SearchSortVehicleModel(sortCondition, page, searchCondition, currentFilter);
+            
             return View(vehicles);
         }
 
         // GET: VehicleModel/Details/5
-        public ActionResult Details(int? id)
+        public ActionResult Details(Guid? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            VehicleModel vehicleModel = vehicleService.FindVehicleModel(id);
+            VehicleModelViewModel vehicleModel = vehicleService.FindVehicleModel(id);
             if (vehicleModel == null)
             {
                 return HttpNotFound();
@@ -65,7 +63,7 @@ namespace Project.MVC.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "VModelID,VMakeID,Name,Model,Abrv")]VehicleModel vehicleModel)
+        public ActionResult Create([Bind(Include = "VModelID,VMakeID,Name,Model,Abrv")]VehicleModelViewModel vehicleModel)
         {
             if (ModelState.IsValid)
             {
@@ -78,13 +76,13 @@ namespace Project.MVC.Controllers
         }
 
         // GET: VehicleModel/Edit/5
-        public ActionResult Edit(int? id)
+        public ActionResult Edit(Guid? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            VehicleModel vehicleModel = vehicleService.FindVehicleModel(id);
+            VehicleModelViewModel vehicleModel = vehicleService.FindVehicleModel(id);
             if (vehicleModel == null)
             {
                 return HttpNotFound();
@@ -98,7 +96,7 @@ namespace Project.MVC.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "VModelID,VMakeID,Name,Model,Abrv")] VehicleModel vehicleModel)
+        public ActionResult Edit([Bind(Include = "VModelID,VMakeID,Name,Model,Abrv")] VehicleModelViewModel vehicleModel)
         {
             if (ModelState.IsValid)
             {
@@ -110,13 +108,13 @@ namespace Project.MVC.Controllers
         }
 
         // GET: VehicleModel/Delete/5
-        public ActionResult Delete(int? id)
+        public ActionResult Delete(Guid? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            VehicleModel vehicleModel = vehicleService.FindVehicleModel(id);
+            VehicleModelViewModel vehicleModel = vehicleService.FindVehicleModel(id);
             if (vehicleModel == null)
             {
                 return HttpNotFound();
@@ -127,7 +125,7 @@ namespace Project.MVC.Controllers
         // POST: VehicleModel/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult DeleteConfirmed(Guid id)
         {
             vehicleService.DeleteVehicleModel(id);
             return RedirectToAction("Index");

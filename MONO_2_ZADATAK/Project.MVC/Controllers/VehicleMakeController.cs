@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using Project.Service.DAL;
 using Project.Service.Models;
 using PagedList;
+using Project.Service.ViewModels;
 
 namespace Project.MVC.Controllers
 {
@@ -26,24 +27,21 @@ namespace Project.MVC.Controllers
         {
             ViewBag.CurrentSort = sortCondition;
             ViewBag.NameSortParm = sortCondition == "Name" ? "Name_desc" : "Name";
-            var vehicles = vehicleService.SortVehicleMaker(sortCondition, page);
+            ViewBag.AbrvSortParm = sortCondition == "Abrv" ? "Abrv_desc" : "Abrv";
             ViewBag.CurrentFilter = searchCondition;
-
-            if (!String.IsNullOrEmpty(searchCondition))
-            {
-                vehicles = vehicleService.SearchVehicleMaker(searchCondition, currentFilter, page);
-            }
+            var vehicles = vehicleService.SearchSortVehicleMaker(sortCondition, page, searchCondition, currentFilter);
+            
             return View(vehicles);
         }
 
         // GET: VehicleMake/Details/5
-        public ActionResult Details(int? id)
+        public ActionResult Details(Guid? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            VehicleMake vehicleMake = vehicleService.FindVehicleMaker(id);
+            VehicleMakeViewModel vehicleMake = vehicleService.FindVehicleMaker(id);
             if (vehicleMake == null)
             {
                 return HttpNotFound();
@@ -62,7 +60,7 @@ namespace Project.MVC.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "VMakeID,Name,Abrv")] VehicleMake vehicleMake)
+        public ActionResult Create([Bind(Include = "VMakeID,Name,Abrv")] VehicleMakeViewModel vehicleMake)
         {
             if (ModelState.IsValid)
             {
@@ -74,13 +72,13 @@ namespace Project.MVC.Controllers
         }
 
         // GET: VehicleMake/Edit/5
-        public ActionResult Edit(int? id)
+        public ActionResult Edit(Guid? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            VehicleMake vehicleMake = vehicleService.FindVehicleMaker(id);
+            VehicleMakeViewModel vehicleMake = vehicleService.FindVehicleMaker(id);
             if (vehicleMake == null)
             {
                 return HttpNotFound();
@@ -93,7 +91,7 @@ namespace Project.MVC.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "VMakeID,Name,Abrv")] VehicleMake vehicleMake)
+        public ActionResult Edit([Bind(Include = "VMakeID,Name,Abrv")] VehicleMakeViewModel vehicleMake)
         {
             if (ModelState.IsValid)
             {
@@ -104,13 +102,13 @@ namespace Project.MVC.Controllers
         }
 
         // GET: VehicleMake/Delete/5
-        public ActionResult Delete(int? id)
+        public ActionResult Delete(Guid? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            VehicleMake vehicleMake = vehicleService.FindVehicleMaker(id);
+            VehicleMakeViewModel vehicleMake = vehicleService.FindVehicleMaker(id);
             if (vehicleMake == null)
             {
                 return HttpNotFound();
@@ -121,7 +119,7 @@ namespace Project.MVC.Controllers
         // POST: VehicleMake/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult DeleteConfirmed(Guid id)
         {
             vehicleService.DeleteVehicleMaker(id);
             return RedirectToAction("Index");

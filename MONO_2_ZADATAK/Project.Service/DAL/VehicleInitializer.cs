@@ -13,44 +13,45 @@ namespace Project.Service.DAL
         {
             var VehicleMakeList = new List<VehicleMake>
             {
-                InsertToVehicleMake("Ferrari", "/"),
-                InsertToVehicleMake("Porsche", "/"),
-                InsertToVehicleMake("Ford", "/"),
-                InsertToVehicleMake("Chevrolet", "/"),
-                InsertToVehicleMake("Volkswagen", "VW"),
-                InsertToVehicleMake("Pontiac", "/"),
-                InsertToVehicleMake("Pagani", "/"),
-                InsertToVehicleMake("Chrysler", "/"),
-                InsertToVehicleMake("Lamborghini", "/")
+                InsertToVehicleMake(Guid.NewGuid(), "Ferrari", "/"),
+                InsertToVehicleMake(Guid.NewGuid(), "Porsche", "/"),
+                InsertToVehicleMake(Guid.NewGuid(), "Ford", "/"),
+                InsertToVehicleMake(Guid.NewGuid(), "Chevrolet", "/"),
+                InsertToVehicleMake(Guid.NewGuid(), "Volkswagen", "VW"),
+                InsertToVehicleMake(Guid.NewGuid(), "Pontiac", "/"),
+                InsertToVehicleMake(Guid.NewGuid(), "Pagani", "/"),
+                InsertToVehicleMake(Guid.NewGuid(), "Chrysler", "/"),
+                InsertToVehicleMake(Guid.NewGuid(), "Lamborghini", "/")
             };
             VehicleMakeList.ForEach(x => context.VehicleMakes.Add(x));
             context.SaveChanges();
 
-            var VehicleModelList = new List<VehicleModel>
-            {
-                InsertToVehicleModel(1, "LaFerrari", "/"),
-                InsertToVehicleModel(1, "488 Gran Turismo Berlinetta","488GTB"),
-                InsertToVehicleModel(2, "365", "/"),
-                InsertToVehicleModel(2, "Carrera GT type 980", "/"),
-                InsertToVehicleModel(3, "Mustang", "/"),
-                InsertToVehicleModel(4, "Camaro", "/"),
-                InsertToVehicleModel(4, "Impala 1967", "/"),
-                InsertToVehicleModel(5, "Volkswagen III TD 1.9", "/"),
-                InsertToVehicleModel(6, "GTO", "/"),
-                InsertToVehicleModel(7, "Zonda", "/"),
-                InsertToVehicleModel(8, "300C", "/"),
-                InsertToVehicleModel(9, "Aventador", "/")
-            };
-            VehicleModelList.ForEach(x => context.VehicleModel.Add(x));
-            context.SaveChanges();
+            //var VehicleModelList = new List<VehicleModel> ZAŠTO OVO NE RADI?
+            //{
+            //    InsertToVehicleModel(Guid.NewGuid(), "LaFerrari", "/"),
+            //    InsertToVehicleModel(Guid.NewGuid(), "488 Gran Turismo Berlinetta","488GTB"),
+            //    InsertToVehicleModel(Guid.NewGuid(), "365", "/"),
+            //    InsertToVehicleModel(Guid.NewGuid(), "Carrera GT type 980", "/"),
+            //    InsertToVehicleModel(Guid.NewGuid(), "Mustang", "/"),
+            //    InsertToVehicleModel(Guid.NewGuid(), "Camaro", "/"),
+            //    InsertToVehicleModel(Guid.NewGuid(), "Impala 1967", "/"),
+            //    InsertToVehicleModel(Guid.NewGuid(), "Volkswagen III TD 1.9", "/"),
+            //    InsertToVehicleModel(Guid.NewGuid(), "GTO", "/"),
+            //    InsertToVehicleModel(Guid.NewGuid(), "Zonda", "/"),
+            //    InsertToVehicleModel(Guid.NewGuid(), "300C", "/"),
+            //    InsertToVehicleModel(Guid.NewGuid(), "Aventador", "/")
+            //};
+            //VehicleModelList.ForEach(x => context.VehicleModel.Add(x));
+            //context.SaveChanges();
+            base.Seed(context);
         }
 
-        public VehicleMake InsertToVehicleMake(string name, string abrv)
+        public VehicleMake InsertToVehicleMake(Guid vmakeid, string name, string abrv)
         {
-            return new VehicleMake { Name = name, Abrv = abrv };
+            return new VehicleMake { VMakeID = vmakeid ,Name = name, Abrv = abrv };
         }
 
-        public VehicleModel InsertToVehicleModel(int vmakeid, string model, string abrv)
+        public VehicleModel InsertToVehicleModel(Guid vmakeid, string model, string abrv)
         {
             return new VehicleModel { VMakeID = vmakeid, Model = model, Abrv = abrv };
         }

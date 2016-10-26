@@ -6,16 +6,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Project.Service.Models
+namespace Project.Service.ViewModels
 {
-    public class VehicleMake
+    public class VehicleMakeViewModel
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid VMakeID { get; set; }
         public string Name { get; set; }
         public string Abrv { get; set; }
-
-        public ICollection<VehicleModel> VehicleModels { get; set; }
     }
 }

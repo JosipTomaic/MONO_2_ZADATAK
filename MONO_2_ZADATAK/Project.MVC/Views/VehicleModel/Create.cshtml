@@ -1,4 +1,4 @@
-﻿@model Project.Service.Models.VehicleModel
+﻿@model Project.Service.ViewModels.VehicleModelViewModel
 
 @{
     ViewBag.Title = "Create";
@@ -16,7 +16,7 @@
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group">
-            @Html.LabelFor(model => model.VMakeID, "VMakeID", htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.VMakeID, "Name", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.DropDownListFor(model => model.VMakeID, new SelectList(ViewBag.VMakeID, "VMakeID", "Name"))
                 @Html.ValidationMessageFor(model => model.VMakeID, "", new { @class = "text-danger" })
